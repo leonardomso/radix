@@ -45,6 +45,7 @@ const styleProps = compose(
 export const Text = styled('span')<TextProps>(
   css({
     color: 'grays.7',
+    fontFamily: 'normal',
     fontSize: 'inherit',
     margin: 0,
   }),
@@ -104,8 +105,8 @@ export const Text = styled('span')<TextProps>(
   }),
   variant({
     fontWeight: {
-      normal: { fontWeight: 400, fontFamily: 'normal' },
-      bold: { fontWeight: 500, fontFamily: 'medium' },
+      normal: { fontWeight: 400 },
+      bold: { fontWeight: 500 },
     },
   }),
   styleProps

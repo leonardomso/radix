@@ -27,7 +27,7 @@ export const Button = styled('button')<ButtonProps>(
     borderRadius: 1,
     cursor: 'pointer',
     display: 'inline-flex',
-    fontFamily: 'medium',
+    fontFamily: 'normal',
     fontWeight: 500,
     outline: 'none',
     paddingY: 0,

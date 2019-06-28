@@ -17,7 +17,7 @@ export const Badge = styled('span')<BadgeProps>(
     border: '1px solid',
     borderRadius: 9999,
     display: 'inline-flex',
-    fontFamily: 'medium',
+    fontFamily: 'normal',
     fontWeight: 500,
     letterSpacing: '.134em',
     outline: 'none',

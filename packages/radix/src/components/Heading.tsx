@@ -33,6 +33,7 @@ const styleProps = compose(
 export const Heading = styled('h1')<HeadingProps>(
   css({
     color: 'grays.8',
+    fontFamily: 'normal',
     margin: 0,
     lineHeight: 1.2,
   }),
@@ -81,8 +82,8 @@ export const Heading = styled('h1')<HeadingProps>(
   }),
   variant({
     fontWeight: {
-      normal: { fontWeight: 400, fontFamily: 'normal' },
-      bold: { fontWeight: 500, fontFamily: 'medium' },
+      normal: { fontWeight: 400 },
+      bold: { fontWeight: 500 },
     },
   }),
   styleProps

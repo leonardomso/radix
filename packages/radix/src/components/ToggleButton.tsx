@@ -95,7 +95,7 @@ const FakeRadio = styled('span')<ToggleButtonProps>(
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: 'medium',
+      fontFamily: 'normal',
       fontWeight: 500,
       fontSize: 2,
       lineHeight: 1,
