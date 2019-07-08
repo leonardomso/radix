@@ -23,7 +23,7 @@ import {
   compose,
 } from '@modulz/radix-system';
 
-type ButtonProps = MarginProps &
+export type ButtonProps = MarginProps &
   PaddingProps &
   BackgroundColorProps &
   TextColorProps &
@@ -33,6 +33,7 @@ type ButtonProps = MarginProps &
   FontFamilyProps &
   FontWeightProps &
   LineHeightProps;
+
 const styleProps = compose(
   margin,
   padding,
@@ -46,4 +47,7 @@ const styleProps = compose(
   lineHeight
 );
 
-export const Button = styled('button')<ButtonProps>({ appearance: 'none' }, styleProps);
+export const Button = styled('button')<ButtonProps>(
+  { appearance: 'none', alignItems: 'center', display: 'inline-flex' },
+  styleProps
+);

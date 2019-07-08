@@ -19,13 +19,6 @@ storiesOf('Components|Button', module)
   .add('default', () => (
     <>
       <Button
-        // margin={spaceKnob('Margin')}
-        // marginTop={spaceKnob('Margin top')}
-        // marginRight={spaceKnob('Margin right')}
-        // marginBottom={spaceKnob('Margin bottom')}
-        // marginLeft={spaceKnob('Margin left')}
-        // marginY={spaceKnob('Margin Y')}
-        // marginX={spaceKnob('Margin X')}
         padding={spaceKnob('Padding')}
         paddingTop={spaceKnob('Padding top')}
         paddingRight={spaceKnob('Padding right')}
