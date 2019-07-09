@@ -3199,6 +3199,13 @@
   resolved "https://registry.yarnpkg.com/@peduarte/styled-system__core/-/styled-system__core-0.0.1.tgz#de78b6aa193c39d9029d3ed036bd481ad6a5b925"
   integrity sha512-s3CtmKoSZCyOZfe03ftUrOqVhFTryWuQhs0koYOvyoNnsMtV+NDvMSFf/SHxl9uvy/jp20qkkFlIVu0x9WJOFA==
 
+"@types/styled-system__css@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/styled-system__css/-/styled-system__css-5.0.1.tgz#3542642f62f78c01f922a3d8a9a0a840b3d51557"
+  integrity sha512-jYk476l4FavfVGpCFTJv/IqIn5eG5c9hpRnfXhFyGYzrVq0Z7YqCkxg8ZuKzU9YjF7EIoGisi9enw4AtfqgOhg==
+  dependencies:
+    csstype "^2.6.5"
+
 "@types/tmp@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/tmp/-/tmp-0.0.32.tgz#0d3cb31022f8427ea58c008af32b80da126ca4e3"
