@@ -25,10 +25,10 @@ export function Portal({ children }: PortalProps) {
   }
 
   // We append the host element and remove it when necessary
-  React.useEffect(function setupPortal() {
+  React.useEffect(() => {
     document.body.appendChild(hostElement);
 
-    return function teardowdnPortal() {
+    return () => {
       hostElement.remove();
     };
   }, [hostElement]);
