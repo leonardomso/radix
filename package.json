@@ -14,6 +14,7 @@
     "radix-system:build": "lerna exec --scope @modulz/radix-system -- yarn build",
     "icons": "lerna exec --scope @modulz/radix-icons -- yarn watch",
     "icons:build": "lerna exec --scope @modulz/radix-icons -- yarn build",
+    "primitives:build": "lerna exec --scope @modulz/primitives -- yarn build-storybook",
     "build": "yarn radix-system:build && yarn radix:build && yarn icons:build && yarn website:build",
     "prettier": "prettier './**/*.{js,jsx,ts,tsx,json,yml,yaml,css,md}' --write",
     "lint": "eslint './packages/**/*.{js,jsx,ts,tsx}'",
