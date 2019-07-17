@@ -5,12 +5,12 @@ import { ButtonWithIcon } from './ButtonWithIcon';
 import { theme } from '../theme';
 import { PlusIcon } from '@modulz/radix-icons';
 
-const options = ops => ({ '': 'null', ...ops });
-const spaceKnob = label => select(label, options(theme.space));
-const colorKnob = label => select(label, options(theme.colors));
-const radiiKnob = label => select(label, options(theme.radii));
-const borderKnob = label => select(label, options(theme.borderWidths));
-const fontSizeKnob = label => select(label, options(theme.fontSizes));
+const options = (ops: any) => ({ '': 'null', ...ops });
+const spaceKnob = (label = '', value?: any) => select(label, options(theme.space), value);
+const colorKnob = (label = '', value?: any) => select(label, options(theme.colors), value);
+const radiiKnob = (label = '', value?: any) => select(label, options(theme.radii), value);
+const borderKnob = (label = '', value?: any) => select(label, options(theme.borderWidths), value);
+const fontSizeKnob = (label = '', value?: any) => select(label, options(theme.fontSizes), value);
 
 storiesOf('Components|ButtonWithIcon', module)
   .addDecorator(withKnobs)
@@ -46,7 +46,8 @@ storiesOf('Components|ButtonWithIcon', module)
     <>
       <ButtonWithIcon
         icon={PlusIcon}
-        iconPosition={select('Icon position', ['before', 'after', 'before'])}
+        // @ts-ignore: don't know what's going on here
+        iconPosition={select('Icon position', ['before', 'after'], 'before')}
         iconGap={spaceKnob('Icon gap')}
         paddingY={spaceKnob('Padding Y')}
         paddingX={spaceKnob('Padding X')}

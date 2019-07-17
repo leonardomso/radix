@@ -7,15 +7,15 @@ import { theme } from '../theme';
 import { css as sx } from '@styled-system/css';
 import { variant } from '@modulz/radix-system';
 
-const options = ops => ({ '': 'null', ...ops });
-const spaceKnob = label => select(label, options(theme.space));
-const colorKnob = label => select(label, options(theme.colors));
-const radiiKnob = label => select(label, options(theme.radii));
-const borderKnob = label => select(label, options(theme.borderWidths));
-const fontSizeKnob = label => select(label, options(theme.fontSizes), 2);
-const fontFamilyKnob = label => select(label, options(theme.fonts), 'normal');
-const fontWeightKnob = label => select(label, options(theme.fontWeights));
-const lineHeightKnob = label => select(label, options(theme.lineHeights));
+const options = (ops: any) => ({ '': 'null', ...ops });
+const spaceKnob = (name = '', value?: any) => select(name, options(theme.space), value);
+const colorKnob = (name = '', value?: any) => select(name, options(theme.colors), value);
+const radiiKnob = (name = '', value?: any) => select(name, options(theme.radii), value);
+const borderKnob = (name = '', value?: any) => select(name, options(theme.borderWidths), value);
+const fontSizeKnob = (name = '', value = 2) => select(name, options(theme.fontSizes), value);
+const fontFamilyKnob = (name = '', value = 'normal') => select(name, options(theme.fonts), value);
+const fontWeightKnob = (name = '', value?: any) => select(name, options(theme.fontWeights), value);
+const lineHeightKnob = (name = '', value?: any) => select(name, options(theme.lineHeights), value);
 
 storiesOf('Components|Button', module)
   .addDecorator(withKnobs)
@@ -78,7 +78,7 @@ storiesOf('Components|Button', module)
     </>
   ));
 
-function RadixButton(props) {
+function RadixButton(props: any) {
   return (
     <Button
       {...props}

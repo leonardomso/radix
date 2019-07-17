@@ -4,10 +4,10 @@ import { withKnobs, select } from '@storybook/addon-knobs/react';
 import { Slider } from './Slider';
 import { theme } from '../theme';
 
-const options = ops => ({ '': 'null', ...ops });
-const sizeKnob = (label, fallback = undefined) => select(label, options(theme.sizes), fallback);
-const colorKnob = (label, fallback = undefined) => select(label, options(theme.colors), fallback);
-const radiiKnob = (label, fallback = undefined) => select(label, options(theme.radii), fallback);
+const options = (ops: any) => ({ '': 'null', ...ops });
+const sizeKnob = (label = '', value?: any) => select(label, options(theme.sizes), value);
+const colorKnob = (label = '', value?: any) => select(label, options(theme.colors), value);
+const radiiKnob = (label = '', value?: any) => select(label, options(theme.radii), value);
 
 storiesOf('Components|Slider', module)
   .addDecorator(withKnobs)
