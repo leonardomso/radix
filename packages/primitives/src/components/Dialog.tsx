@@ -59,7 +59,7 @@ type DialogContentProps = {
 function DialogContent({ children }: DialogContentProps) {
   return (
     <div
-      role="modal"
+      role="dialog"
       aria-modal="true"
       tabIndex={-1}
       // minimal functional styles
