@@ -9,7 +9,7 @@ export function observeElementRect(
   /** The callback which will be called when the rect changes */
   callback: CallbackFn
 ) {
-  // We accept null to simplify call site with TS and react refs being temporarily null
+  // accept null to simplify call site with TS and react refs being temporarily null
   if (elementToObserve === null) {
     return () => {};
   }
@@ -17,16 +17,16 @@ export function observeElementRect(
   const observedData = observedElements.get(elementToObserve);
 
   if (observedData === undefined) {
-    // We add the element to the map of observed elements with its first callback
+    // add the element to the map of observed elements with its first callback
     // because this is the first time this element is observed
     observedElements.set(elementToObserve, { rect: {} as ClientRect, callbacks: [callback] });
 
     if (observedElements.size === 1) {
-      // We start our own internal loop once we are observing at least 1 element
+      // start the internal loop once at least 1 element is observed
       runLoop();
     }
   } else {
-    // We only need to a callback for this element as it's already observed
+    // only add a callback for this element as it's already observed
     observedData.callbacks.push(callback);
   }
 
@@ -34,20 +34,19 @@ export function observeElementRect(
     const observedData = observedElements.get(elementToObserve);
     if (observedData === undefined) return;
 
-    // We start by removing the callback
+    // start by removing the callback
     const index = observedData.callbacks.indexOf(callback);
     if (index > -1) {
       observedData.callbacks.splice(index, 1);
     }
 
     if (observedData.callbacks.length === 0) {
-      // We we can stop observing this element because there are no
+      // stop observing this element because there are no
       // callbacks registered for it anymore
       observedElements.delete(elementToObserve);
 
       if (observedElements.size === 0) {
-        // We stop our own internal loop
-        // once we are not observing any elements anymore
+        // stop the internal loop once no elements are observed anymore
         cancelAnimationFrame(rafId);
       }
     }
@@ -70,19 +69,19 @@ const observedElements: Map<HTMLElement, ObservedData> = new Map();
 function runLoop() {
   const changedRectsData: Array<ObservedData> = [];
 
-  // Do all DOM reads first (getBoundingClientRect)
+  // process all DOM reads first (getBoundingClientRect)
   observedElements.forEach((data, element) => {
     const newRect = element.getBoundingClientRect();
 
-    // Gather all the data for elements whose rects have changed
+    // gather all the data for elements whose rects have changed
     if (!rectEquals(data.rect, newRect)) {
       data.rect = newRect;
       changedRectsData.push(data);
     }
   });
 
-  // DOM writes will most likely happen with the callbacks
-  // so we group then here after the DOM reads (getBoundingClientRect)
+  // group DOM writes here after the DOM reads (getBoundingClientRect)
+  // as DOM writes will most likely happen with the callbacks
   changedRectsData.forEach(data => {
     data.callbacks.forEach(callback => callback(data.rect));
   });

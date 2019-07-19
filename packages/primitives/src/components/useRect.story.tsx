@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { useRect } from './useRect';
 
-storiesOf('Components|useRect', module).add('default', () => <Example />);
+storiesOf('Hooks|useRect', module).add('default', () => <Example />);
 
 function Example() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);

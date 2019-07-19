@@ -1,4 +1,8 @@
-export function getCollisions(rect: ClientRect) {
+import { Side } from './geometry';
+
+export type Collisions = Record<Side, boolean>;
+
+export function getCollisions(rect: ClientRect): Collisions {
   return {
     top: rect.top < 0,
     right: rect.right > window.innerWidth,

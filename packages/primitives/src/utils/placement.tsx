@@ -1,91 +1,155 @@
-export const PLACEMENT_OPTIONS = [
-  'top-start',
-  'top-center',
-  'top-end',
-  'top-right',
+import { getCollisions, Collisions } from './collision';
+import { Axis, Side, Align, Point } from './geometry';
 
-  'right-start',
-  'right-center',
-  'right-end',
-  'bottom-right',
+/**
+ * Get a point (x, y) for the placement of a rect based on a target rect
+ * given a side (top, right, bottom, left) and an alignment (start, center, end)
+ */
+export function getPlacementPoint(
+  /** The rect of the target we are placing around */
+  targetRect: ClientRect,
+  /** The rect of the element to place */
+  placingRect: ClientRect,
+  /** The desired side */
+  side: Side,
+  /** The desired alignment */
+  align: Align,
+  sideOffset: number = 0,
+  alignOffset: number = 0
+): Point {
+  // pre-compute points for all potential placements
+  const allPlacementPoints = getAllPlacementPoints(
+    targetRect,
+    placingRect,
+    sideOffset,
+    alignOffset
+  );
 
-  'bottom-end',
-  'bottom-center',
-  'bottom-start',
-  'bottom-left',
+  // get point based on side / align
+  const point = allPlacementPoints[side][align];
 
-  'left-end',
-  'left-center',
-  'left-start',
-  'top-left',
-] as const;
+  // create a new rect as if element had been moved to new placement
+  const updatedPlacingRect = updateRectWithPoint(placingRect, point);
 
-export type PlacementOption = typeof PLACEMENT_OPTIONS[number];
+  // check for any collisions in new placement
+  const placingCollisions = getCollisions(updatedPlacingRect);
 
-export type PlacementCoords = {
-  x: number;
-  y: number;
-};
+  // adjust side / align accounting for collisions
+  const adjustedSide = getSideAccountingForCollisions(side, placingCollisions);
+  const adjustedAlign = getAlignAccountingForCollisions(side, align, placingCollisions);
 
-type GetPlacementCoordsOptions = {
-  targetRect?: ClientRect;
-  placingRect?: ClientRect;
-  placement: PlacementOption;
-};
+  // get new point based on adjusted side / align
+  const adjustedPoint = allPlacementPoints[adjustedSide][adjustedAlign];
+  return adjustedPoint;
+}
 
-type GetPlacementCoordsReturn = PlacementCoords | undefined;
+export function getPlacementStylesForPoint({ x, y }: Point): React.CSSProperties {
+  return {
+    top: y + window.pageYOffset,
+    left: x + window.pageXOffset,
+  };
+}
 
-export function getPlacementCoords(options: GetPlacementCoordsOptions): GetPlacementCoordsReturn {
-  const { targetRect, placingRect, placement } = options;
+type AllPlacementPoints = Record<Side, Record<Align, Point>>;
 
-  if (targetRect === undefined || placingRect === undefined) {
-    return;
-  }
+function getAllPlacementPoints(
+  targetRect: ClientRect,
+  placingRect: ClientRect,
+  sideOffset: number = 0,
+  alignOffset: number = 0
+): AllPlacementPoints {
+  const x = getPlacementSlotsForAxis(targetRect, placingRect, 'x');
+  const y = getPlacementSlotsForAxis(targetRect, placingRect, 'y');
 
-  const xBefore = targetRect.left - placingRect.width;
-  const xStart = targetRect.left;
-  const xMiddle = targetRect.left + targetRect.width / 2 - placingRect.width / 2;
-  const xEnd = targetRect.left + targetRect.width - placingRect.width;
-  const xAfter = targetRect.left + targetRect.width;
+  // prettier-ignore
+  const map: AllPlacementPoints = {
+    top: {
+      start:  { x: x.start + alignOffset,  y: y.before + sideOffset },
+      center: { x: x.center,               y: y.before + sideOffset },
+      end:    { x: x.end - alignOffset,    y: y.before + sideOffset },
+    },
+    right: {
+      start:  { x: x.after - sideOffset,   y: y.start + alignOffset },
+      center: { x: x.after - sideOffset,   y: y.center },
+      end:    { x: x.after - sideOffset,   y: y.end - alignOffset },
+    },
+    bottom: {
+      start:  { x: x.start + alignOffset,  y: y.after - sideOffset },
+      center: { x: x.center,               y: y.after - sideOffset },
+      end:    { x: x.end - alignOffset,    y: y.after - sideOffset },
+    },
+    left: {
+      start:  { x: x.before + sideOffset,  y: y.start + alignOffset },
+      center: { x: x.before + sideOffset,  y: y.center },
+      end:    { x: x.before + sideOffset,  y: y.end - alignOffset },
+    },
+  };
 
-  const yBefore = targetRect.top - placingRect.height;
-  const yStart = targetRect.top;
-  const yMiddle = targetRect.top + targetRect.height / 2 - placingRect.height / 2;
-  const yEnd = targetRect.top + targetRect.height - placingRect.height;
-  const yAfter = targetRect.top + targetRect.height;
+  return map;
+}
+
+function getPlacementSlotsForAxis(targetRect: ClientRect, placingRect: ClientRect, axis: Axis) {
+  const startSide = axis === 'x' ? 'left' : 'top';
+  const targetStart = targetRect[startSide];
+
+  const dimension = axis === 'x' ? 'width' : 'height';
+  const targetDimension = targetRect[dimension];
+  const placingDimension = placingRect[dimension];
 
   // prettier-ignore
   return {
-    'top-start':     { x: xStart,  y: yBefore },
-    'top-center':    { x: xMiddle, y: yBefore },
-    'top-end':       { x: xEnd,    y: yBefore },
-    'top-right':     { x: xAfter,  y: yBefore },
-
-    'right-start':   { x: xAfter,  y: yStart, },
-    'right-center':  { x: xAfter,  y: yMiddle },
-    'right-end':     { x: xAfter,  y: yEnd,   },
-    'bottom-right':  { x: xAfter,  y: yAfter, },
-
-    'bottom-end':    { x: xEnd,    y: yAfter, },
-    'bottom-center': { x: xMiddle, y: yAfter, },
-    'bottom-start':  { x: xStart,  y: yAfter, },
-    'bottom-left':   { x: xBefore, y: yAfter, },
-
-    'left-end':      { x: xBefore, y: yEnd,   },
-    'left-center':   { x: xBefore, y: yMiddle },
-    'left-start':    { x: xBefore, y: yStart, },
-    'top-left':      { x: xBefore, y: yBefore },
-  }[placement];
+    before: targetStart - placingDimension,
+    start:  targetStart,
+    center: targetStart + (targetDimension - placingDimension) / 2,
+    end:    targetStart + targetDimension - placingDimension,
+    after:  targetStart + targetDimension,
+  };
 }
 
-export function getPlacementStylesRelativeToWindow(
-  placementCoords?: PlacementCoords
-): React.CSSProperties {
-  if (placementCoords === undefined) {
-    return { visibility: 'hidden' };
-  }
+function updateRectWithPoint(rect: ClientRect, { x, y }: Point): ClientRect {
   return {
-    top: placementCoords.y + window.pageYOffset,
-    left: placementCoords.x + window.pageXOffset,
+    ...rect,
+    top: y,
+    bottom: y + rect.height,
+    left: x,
+    right: x + rect.width,
   };
+}
+
+function getSideAccountingForCollisions(side: Side, collisions: Collisions): Side {
+  return collisions[side] ? getOppositeSide(side) : side;
+}
+
+function getAlignAccountingForCollisions(side: Side, align: Align, collisions: Collisions): Align {
+  let newAlign = align;
+
+  if (side === 'top' || side === 'bottom') {
+    if ((align === 'start' && collisions.right) || (align === 'center' && collisions.right)) {
+      newAlign = 'end';
+    }
+    if ((align === 'end' && collisions.left) || (align === 'center' && collisions.left)) {
+      newAlign = 'start';
+    }
+  }
+
+  if (side === 'left' || side === 'right') {
+    if ((align === 'start' && collisions.bottom) || (align === 'center' && collisions.bottom)) {
+      newAlign = 'end';
+    }
+    if ((align === 'end' && collisions.top) || (align === 'center' && collisions.top)) {
+      newAlign = 'start';
+    }
+  }
+
+  return newAlign;
+}
+
+function getOppositeSide(side: Side): Side {
+  const oppositeSides: Record<Side, Side> = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  };
+  return oppositeSides[side];
 }
